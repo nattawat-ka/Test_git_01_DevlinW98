@@ -5,7 +5,6 @@ function App() {
     return(
         <dev>
             Hi
-            ho
             <botton>++</botton>
         </dev>
     )
