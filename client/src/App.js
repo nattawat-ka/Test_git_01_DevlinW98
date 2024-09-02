@@ -6,6 +6,7 @@ function App() {
         <dev>
             Hi
             ho
+            <botton>+</botton>
         </dev>
     )
 
