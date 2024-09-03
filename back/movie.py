@@ -50,6 +50,18 @@ class Movie:
     def set_genre(self, genre):
         self.__genre = genre
 
+    def get_info(self):
+        info = {"Title": self.__title,
+                "URL Picture": self.__url_picture,
+                "Score":self.__score,
+                "Duration":self.__duration,
+                "Director":self.__director,
+                "Genre": self.__genre,
+                "Description":self.__description
+                }
+        print(info)
+        return info
+
     def display_info(self):
         info = (f"Title: {self.__title}\n"
                 f"URL Picture: {self.__url_picture}\n"

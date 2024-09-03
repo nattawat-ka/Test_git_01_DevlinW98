@@ -7,6 +7,14 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor
 from movie import Movie
+import firebase_admin
+from firebase_admin import credentials,firestore
+
+cred = credentials.Certificate("back/test-web-by-devlin-firebase-adminsdk-pijiq-9afdd5cfd7.json")
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
+
 
 url = 'https://www.imdb.com/chart/top'
 headers = {
@@ -72,21 +80,20 @@ if script_tag:
             for result in results:
                 movies_list.append(result)
 
-        with open('List_250movies.json', 'w', encoding='utf-8') as jsonfile:
-            json.dump([movie.__dict__ for movie in movies_list], jsonfile, ensure_ascii=False, indent=4)
-
-        with open('csv_250_movies.csv', 'w', newline='', encoding='utf-8') as csvfile:
-            csv_writer = csv.writer(csvfile)
-            csv_writer.writerow(['Title', 'Duration', 'Rating', 'Description', 'Image URL', 'Director', 'Genres'])
-            for movie in movies_list:
-                csv_writer.writerow([movie.get_title(), movie.get_duration(), movie.get_score(), movie.get_description(), movie.get_url_picture(), movie.get_director(), movie.get_genre()])
-
-        os.remove('json_ld_content.json')
-
         print("Data successfully saved to List_250movies.json and csv_250_movies.csv, and json_ld_content.json file deleted.")
         #testดู#
-        index_movie = movies_list[int(input("insert index 0-249 to print: "))]
-        index_movie.display_info()
+
+        # index_movie = movies_list[0]
+        # index_movie.get_info()
+        # movie_ref = db.collection('movie').document("1")
+        
+
+        for i in range(len(movies_list)):
+            number = f"{i+1}"
+            movie_ref = db.collection('movie').document(number)
+            index_movie = movies_list[i]
+            movie_ref.set(index_movie.get_info())
+
 
     except json.JSONDecodeError as e:
         print(f"JSON decode error: {e}")
