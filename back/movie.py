@@ -59,7 +59,6 @@ class Movie:
                 "Genre": self.__genre,
                 "Description":self.__description
                 }
-        print(info)
         return info
 
     def display_info(self):

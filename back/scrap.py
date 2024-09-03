@@ -82,17 +82,22 @@ if script_tag:
 
         print("Data successfully saved to List_250movies.json and csv_250_movies.csv, and json_ld_content.json file deleted.")
         #testดู#
-
+        # number = f"{1}"
         # index_movie = movies_list[0]
         # index_movie.get_info()
+        # result = index_movie.get_info()
+        # result = dict(result , id = number)
+        # print(result)
         # movie_ref = db.collection('movie').document("1")
         
 
         for i in range(len(movies_list)):
             number = f"{i+1}"
-            movie_ref = db.collection('movie').document(number)
             index_movie = movies_list[i]
-            movie_ref.set(index_movie.get_info())
+            result = index_movie.get_info()
+            result = dict(result , Id = number)
+            movie_ref = db.collection('movie').document(result.get("Title"))
+            movie_ref.set(result)
 
 
     except json.JSONDecodeError as e:
