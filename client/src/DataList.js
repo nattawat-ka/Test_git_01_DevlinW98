@@ -4,21 +4,25 @@ import { db } from "./firebase";
 
 function DataList() {
   const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Query Firestore to get data sorted by 'Id'
         const q = query(collection(db, "movie"));
         const querySnapshot = await getDocs(q);
         const items = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
-          Id: Number(doc.data().Id) // Convert Id to a number
+          Id: parseInt(doc.data().Id, 10) // Convert Id to a number
         }));
-        // Sort the items by Id in ascending order
-        items.sort((a, b) => a.Id - b.Id);
-        setData(items);
+
+        // Sort data by numeric Id
+        const sortedItems = items.sort((a, b) => a.Id - b.Id);
+
+        setData(sortedItems);
+        setFilteredData(sortedItems); // Initially display all sorted data
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -27,12 +31,43 @@ function DataList() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setFilteredData(data); // Show all data if search term is empty
+    } else {
+      try {
+        const regex = new RegExp(searchTerm, "i"); // 'i' for case-insensitive search
+        const filtered = data.filter(item =>
+          regex.test(item.Title) || regex.test(item.Director) || regex.test(item.Genre)
+        );
+
+        // Ensure filtered data is still sorted by numeric Id
+        const sortedFiltered = filtered.sort((a, b) => a.Id - b.Id);
+        setFilteredData(sortedFiltered);
+      } catch (error) {
+        console.error("Invalid regular expression: ", error);
+        setFilteredData([]); // If regex is invalid, show no results
+      }
+    }
+  }, [searchTerm, data]);
+
+  const handleChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   return (
     <div>
       <h1>Firestore Data Sorted by ID</h1>
-      {data.length > 0 ? (
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={handleChange}
+        style={{ marginBottom: "20px", padding: "10px", width: "300px" }}
+      />
+      {filteredData.length > 0 ? (
         <ul>
-          {data.map(item => (
+          {filteredData.map(item => (
             <li key={item.id}>
               <img src={item["URL Picture"]} alt={item.Title} style={{ width: "100px", height: "150px" }} />
               <h2>{item.Title} ({item.Id})</h2>
