@@ -5,9 +5,152 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #000;
 }
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.card {
+  background-color: #222; /* Darker background for cards */
+  border: 1px solid #444; /* Darker border color */
+  border-radius: 8px;
+  box-shadow: 0 6px 9px rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  width: 200px;
+  text-align: center;
+}
+
+.card-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 15px;
+}
+
+.card-content h4 {
+  margin: 10px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #f5c518; /* IMDb yellow */
+}
+
+.card-content p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #fff;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Slightly darker overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: #333; /* Dark background for popup */
+  padding: 20px;
+  border-radius: 5px;
+  width: 80%;
+  max-width: 500px;
+  position: relative;
+  color: #f5c518; /* IMDb yellow */
+}
+
+.popup-content button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #fff;
+  background: #f5c518; /* IMDb yellow */
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #222; /* Dark background for navbar */
+  border-bottom: 1px solid #444; /* Darker border */
+  margin-bottom: 32px;
+}
+
+.navbar-title {
+  margin: 0;
+  font-size: 1.5em;
+  color: #f5c518; /* IMDb yellow */
+}
+
+.navbar-search {
+  padding: 8px;
+  width: 200px;
+  border: 1px solid #f5c518; /* IMDb yellow border */
+  border-radius: 4px;
+  background: #333; /* Dark background for input */
+  color: #fff;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #000; /* Dark background for pagination controls */
+}
+
+.pagination-controls select {
+  padding: 10px;
+  margin-left: 60px;
+  margin-bottom: 35px;
+  color: #fff;
+  background-color: #222; /* Dark background for select */
+  border: 1px solid #f5c518; /* IMDb yellow border */
+}
+
+.pagination {
+  display: flex;
+  gap: 5px;
+}
+
+.pagination button {
+  padding: 5px 10px;
+  margin-bottom: 25px;
+  border: 1px solid #444; /* Darker border color */
+  background-color: #333; /* Dark background for buttons */
+  color: #f5c518; /* IMDb yellow */
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #f5c518; /* IMDb yellow for active page */
+  color: #000; /* Dark text color for active page */
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  background-color: #555; /* Darker background for disabled buttons */
+  color: #999; /* Lighter text color for disabled buttons */
 }
