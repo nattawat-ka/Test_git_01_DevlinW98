@@ -9,7 +9,7 @@ function DataList() {
   const [filteredData, setFilteredData] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10); // Default number of items per page
+  const [itemsPerPage, setItemsPerPage] = useState(10); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +31,7 @@ function DataList() {
       }
     };
 
+    
     fetchData();
   }, []);
 
@@ -65,7 +66,7 @@ function DataList() {
     setSelectedItem(null);
   };
 
-  // Pagination logic
+
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const start = (currentPage - 1) * itemsPerPage;
   const end = currentPage * itemsPerPage;
