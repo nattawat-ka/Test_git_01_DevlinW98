@@ -181,8 +181,10 @@ function DataList() {
                     onChange={handleChange}
                     className="navbar-search"
                 />
+                <div className='ButtonZone'>
                 <button onClick={Scraping}>Scraping</button>
                 <button onClick={onclick_download_button}>Download</button>
+                </div>
                 
             </div>
             <Show_Status />
@@ -208,23 +210,57 @@ function DataList() {
             ) : (
                 <p>No data found</p>
             )}
+             <PaginationControls
+                currentPage={currentPage}
+                totalPages={totalPages}
+                itemsPerPage={itemsPerPage}
+                onItemsPerPageChange={handleItemsPerPageChange}
+                onPageChange={handlePageChange}
+            />
             {selectedItem && (
                 <div className="popup-overlay" onClick={handleClosePopup}>
                     <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                    <div className="text-content">
                         <h2>{selectedItem._Movie__title}</h2>
                         <p><strong>Duration:</strong> {selectedItem._Movie__duration}</p>
                         <p><strong>Director:</strong> {selectedItem._Movie__director}</p>
                         <p><strong>Genre:</strong> {selectedItem._Movie__genre}</p>
                         <p><strong>Description:</strong> {selectedItem._Movie__description}</p>
-                        <button onClick={handleClosePopup}>Close</button>
+                    </div>
+                    <img src={selectedItem._Movie__url_picture} alt={selectedItem._Movie__title} className="pop_img" />
+                    <button onClick={handleClosePopup}>X</button>
                     </div>
                 </div>
+                
             )}
+            <footer className="footer">
+                <p>&copy; อยากใส่อะไรก็ใส่</p>
+            </footer>
         </div>
     );
 }
 
 const PaginationControls = ({ currentPage, totalPages, itemsPerPage, onItemsPerPageChange, onPageChange }) => {
+    const maxPageDisplay = 3; // จำนวนหน้าที่จะแสดง
+    const delta = 1; // จำนวนหน้าที่แสดงก่อนและหลังหน้า active
+
+    // คำนวณขอบเขตของหน้าที่จะแสดง
+    let startPage = Math.max(1, currentPage - delta);
+    let endPage = Math.min(totalPages, currentPage + delta);
+
+    // ตรวจสอบกรณีที่จำนวนน้อยกว่า 3 หน้า
+    if (totalPages <= maxPageDisplay) {
+        startPage = 1;
+        endPage = totalPages;
+    } else {
+        // ปรับขอบเขตเมื่อหน้า active อยู่ใกล้เริ่มต้นหรือปลาย
+        if (currentPage <= delta) {
+            endPage = maxPageDisplay;
+        } else if (currentPage + delta >= totalPages) {
+            startPage = totalPages - maxPageDisplay + 1;
+        }
+    }
+
     return (
         <div className="pagination-controls">
             <select value={itemsPerPage} onChange={onItemsPerPageChange}>
@@ -241,15 +277,36 @@ const PaginationControls = ({ currentPage, totalPages, itemsPerPage, onItemsPerP
                 >
                     Previous
                 </button>
-                {[...Array(totalPages).keys()].map((i) => (
-                    <button
-                        key={i}
-                        className={i + 1 === currentPage ? 'active' : ''}
-                        onClick={() => onPageChange(i + 1)}
-                    >
-                        {i + 1}
-                    </button>
-                ))}
+
+                {startPage > 1 && (
+                    <>
+                        <button onClick={() => onPageChange(1)}>1</button>
+                        {startPage > 2 && <span className="paginationspan">...</span>}
+                    </>
+                )}
+
+                {[...Array(endPage - startPage + 1).keys()].map((i) => {
+                    const pageNumber = startPage + i;
+                    return (
+                        <button
+                            key={pageNumber}
+                            className={pageNumber === currentPage ? 'active' : ''}
+                            onClick={() => onPageChange(pageNumber)}
+                        >
+                            {pageNumber}
+                        </button>
+                    );
+                })}
+
+                {endPage < totalPages && (
+                    <>
+                        {endPage < totalPages - 1 && <span className="paginationspan">...</span>}
+                        <button onClick={() => onPageChange(totalPages)}>
+                            {totalPages}
+                        </button>
+                    </>
+                )}
+
                 <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
@@ -260,5 +317,7 @@ const PaginationControls = ({ currentPage, totalPages, itemsPerPage, onItemsPerP
         </div>
     );
 };
+
+
 
 export default DataList;
